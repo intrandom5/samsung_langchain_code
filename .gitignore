@@ -42,5 +42,6 @@ Thumbs.db
 # Agent
 .agents/
 .claude
+skill-lock.json
 
 faiss_index
