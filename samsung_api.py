@@ -27,7 +27,6 @@ model = ChatOpenAI(
         'Completion-Msg-Id': str(uuid.uuid4())
     },
     temperature=0.7,
-    max_tokesn=1000
 )
 
 from langchain.agents.middleware import SummarizationMiddleware
