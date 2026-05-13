@@ -6,6 +6,7 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 from .tools import add_schedule, get_schedules, list_all_schedules, delete_schedule
+from .middleware import tool_logger, token_tracker
 
 from langchain_openai import ChatOpenAI
 from langchain.agents import create_agent
@@ -33,5 +34,6 @@ agent = create_agent(
     model,
     tools=[add_schedule, get_schedules, list_all_schedules, delete_schedule],
     system_prompt=system_prompt,
+    middleware=[tool_logger, token_tracker],
     checkpointer=InMemorySaver(),  # 대화 메모리 (프로그램 종료 시 초기화됨)
 )
