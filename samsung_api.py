@@ -15,11 +15,11 @@ user_id=os.getenv("user_id")
 
 os.environ["OPENAI_API_KEY"] = 'api_key'
 
-model = ChatOpenAI(
+llm = ChatOpenAI(
     model=model,
     base_url=api_base_url,
     default_headers={
-        'x-dep-ticekt': credential_key,
+        'x-dep-ticket': credential_key,
         'Send-System-Name': send_system_name,
         'User-Id': user_id,
         'User-Type': "AD_ID",
@@ -35,7 +35,7 @@ text_summarizer = SummarizationMiddleware(
     model=model,
     base_url=api_base_url,
     default_headers={
-        'x-dep-ticekt': credential_key,
+        'x-dep-ticket': credential_key,
         'Send-System-Name': send_system_name,
         'User-Id': user_id,
         'User-Type': "AD_ID",
