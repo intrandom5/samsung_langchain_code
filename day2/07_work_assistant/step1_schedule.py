@@ -50,9 +50,18 @@ def load_agent():
         add_schedule, get_schedules, list_all_schedules, delete_schedule
     )
 
-    model = ChatOpenAI(
+    os.environ["OPENAI_API_KEY"] = 'api_key'
+    llm = ChatOpenAI(
         model=os.getenv("model"),
-        api_key=os.getenv("credential_key"),
+        base_url=os.getenv("api_base_url"),
+        default_headers={
+            'x-dep-ticket': os.getenv("credential_key"),
+            'Send-System-Name': os.getenv("send_system_name"),
+            'User-Id': os.getenv("user_id"),
+            'User-Type': "AD_ID",
+            'Prompt-Msg-Id': str(uuid.uuid4()),
+            'Completion-Msg-Id': str(uuid.uuid4())
+        },
         temperature=0.7,
     )
 
@@ -76,7 +85,7 @@ def load_agent():
 항상 친절하고 간결하게 답변하세요."""
 
     return create_agent(
-        model,
+        llm,
         tools=[add_schedule, get_schedules, list_all_schedules, delete_schedule],
         system_prompt=system_prompt,
         checkpointer=InMemorySaver(),

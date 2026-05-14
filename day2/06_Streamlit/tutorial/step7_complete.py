@@ -86,14 +86,23 @@ def load_agent():
         # 실제 서비스라면 번역 API를 호출하겠지만, 여기서는 데모용 응답만 반환
         return f"'{text}' → [{target_language} 번역 기능은 데모에서 지원하지 않습니다. 실제 API 연동이 필요합니다]"
 
-    model = ChatOpenAI(
-        model=os.getenv("model", "gpt-4o-mini"),
-        api_key=os.getenv("credential_key"),
+    os.environ["OPENAI_API_KEY"] = 'api_key'
+    llm = ChatOpenAI(
+        model=os.getenv("model"),
+        base_url=os.getenv("api_base_url"),
+        default_headers={
+            'x-dep-ticket': os.getenv("credential_key"),
+            'Send-System-Name': os.getenv("send_system_name"),
+            'User-Id': os.getenv("user_id"),
+            'User-Type': "AD_ID",
+            'Prompt-Msg-Id': str(uuid.uuid4()),
+            'Completion-Msg-Id': str(uuid.uuid4())
+        },
         temperature=0.7,
     )
 
     return create_agent(
-        model,
+        llm,
         tools=[get_weather, calculate, translate],
         system_prompt=(
             "당신은 친절하고 유능한 한국어 AI 어시스턴트입니다.\n"
