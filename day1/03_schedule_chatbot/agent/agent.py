@@ -1,4 +1,5 @@
 import os
+import uuid
 from datetime import date
 from dotenv import load_dotenv, find_dotenv
 
@@ -14,17 +15,17 @@ from langgraph.checkpoint.memory import InMemorySaver
 
 credential_key=os.getenv("credential_key")
 send_system_name=os.getenv("send_system_name")
-model=os.getenv("model")
+model_name=os.getenv("model")
 api_base_url=os.getenv("api_base_url")
 user_id=os.getenv("user_id")
 
 os.environ["OPENAI_API_KEY"] = 'api_key'
 
-model = ChatOpenAI(
-    model=model,
+llm = ChatOpenAI(
+    model=model_name,
     base_url=api_base_url,
     default_headers={
-        'x-dep-ticekt': credential_key,
+        'x-dep-ticket': credential_key,
         'Send-System-Name': send_system_name,
         'User-Id': user_id,
         'User-Type': "AD_ID",
@@ -45,7 +46,7 @@ system_prompt = system_prompt.replace("{today}", today_str)
 
 # ── 에이전트 생성 ─────────────────────────────────────────────────────────────
 agent = create_agent(
-    model,
+    llm,
     tools=[add_schedule, get_schedules, list_all_schedules, delete_schedule],
     system_prompt=system_prompt,
     middleware=[tool_logger, token_tracker],

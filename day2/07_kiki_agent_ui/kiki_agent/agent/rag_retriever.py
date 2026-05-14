@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 from pathlib import Path
 from pptx import Presentation
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
@@ -14,7 +14,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_classic.retrievers import EnsembleRetriever
 
 
-load_dotenv(dotenv_path="../../.env")
+load_dotenv(find_dotenv())
 
 
 class MyCustomEmbeddings(Embeddings):
@@ -108,6 +108,9 @@ class RAGRetriever:
             docs = self.parse_word(file_path)
         elif ext in (".pptx", ".ppt"):
             docs = self.parse_pptx(file_path)
+        else:
+            print(f"지원하지 않는 파일 형식입니다: {ext}")
+            return
 
         chunks = self.splitter.split_documents(docs)
         self.total_chunks += chunks
