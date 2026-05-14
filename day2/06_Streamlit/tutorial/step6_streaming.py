@@ -59,14 +59,23 @@ def load_agent():
         except Exception as e:
             return f"계산 오류: {e}"
 
-    model = ChatOpenAI(
-        model=os.getenv("model", "gpt-4o-mini"),
-        api_key=os.getenv("credential_key"),
+    os.environ["OPENAI_API_KEY"] = 'api_key'
+    llm = ChatOpenAI(
+        model=os.getenv("model"),
+        base_url=os.getenv("api_base_url"),
+        default_headers={
+            'x-dep-ticket': os.getenv("credential_key"),
+            'Send-System-Name': os.getenv("send_system_name"),
+            'User-Id': os.getenv("user_id"),
+            'User-Type': "AD_ID",
+            'Prompt-Msg-Id': str(uuid.uuid4()),
+            'Completion-Msg-Id': str(uuid.uuid4())
+        },
         temperature=0.7,
     )
 
     return create_agent(
-        model,
+        llm,
         tools=[get_weather, calculate],
         system_prompt=(
             "당신은 친절한 한국어 AI 어시스턴트입니다. "
