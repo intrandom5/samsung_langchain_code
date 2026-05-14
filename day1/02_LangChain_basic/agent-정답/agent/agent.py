@@ -20,11 +20,11 @@ user_id = os.getenv("user_id")
 
 os.environ["OPENAI_API_KEY"] = "api_key"
 
-model = ChatOpenAI(
+llm = ChatOpenAI(
     model=model_name,
     base_url=api_base_url,
     default_headers={
-        "x-dep-ticekt": credential_key,
+        "x-dep-ticket": credential_key,
         "Send-System-Name": send_system_name,
         "User-Id": user_id,
         "User-Type": "AD_ID",
@@ -42,7 +42,7 @@ today_str = date.today().strftime("%Y-%m-%d")
 system_prompt = system_prompt.replace("{today}", today_str)
 
 agent = create_agent(
-    model,
+    llm,
     tools=[get_today_date, get_weather, calculator, save_user_info, load_user_info],
     system_prompt=system_prompt,
     middleware=[logging_middleware, token_tracker],

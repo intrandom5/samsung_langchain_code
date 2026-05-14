@@ -1,7 +1,7 @@
 from typing import Any
 from langchain.agents import AgentState
 from langchain.agents.middleware import wrap_tool_call, after_agent, before_agent
-from langchain.messages import AIMessage
+from langchain_core.messages import AIMessage
 from langgraph.runtime import Runtime
 
 _total = {"input": 0, "output": 0}
@@ -36,10 +36,10 @@ def token_tracker(state: AgentState, runtime: Runtime):
 @before_agent(can_jump_to=["end"])
 def guardrail(state: AgentState, runtime: Runtime) -> dict[str, Any] | None:
     # 순환 참조 방지를 위해 함수 실행 시점에 import합니다
-    from .agent import model
+    from .agent import llm
 
     query = state["messages"][-1].content
-    response = model.invoke(
+    response = llm.invoke(
         f"다음 질문이 키키테크 사내 정보(임직원, 제품, 사내규정 등)와 관련된 질문이면 True, 아니면 False만 답하세요.\n질문: {query}"
     )
 

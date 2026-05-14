@@ -20,11 +20,11 @@ user_id = os.getenv("user_id")
 
 os.environ["OPENAI_API_KEY"] = 'api_key'
 
-model = ChatOpenAI(
+llm = ChatOpenAI(
     model=model_name,
     base_url=api_base_url,
     default_headers={
-        'x-dep-ticekt': credential_key,
+        'x-dep-ticket': credential_key,
         'Send-System-Name': send_system_name,
         'User-Id': user_id,
         'User-Type': "AD_ID",
@@ -37,19 +37,19 @@ model = ChatOpenAI(
 # ── Sub-agent 정의 ────────────────────────────────────────────────────────────
 
 employee_agent = create_agent(
-    model,
+    llm,
     tools=[search_employee],
     system_prompt="당신은 키키테크 임직원 정보 전문 에이전트입니다. 임직원의 이름을 파악해서 search_employee 도구로 정보를 찾아 답변하세요.",
 )
 
 product_agent = create_agent(
-    model,
+    llm,
     tools=[search_product],
     system_prompt="당신은 키키테크 제품 전문 에이전트입니다. search_product 도구로 제품 정보를 찾아 답변하세요.",
 )
 
 policy_agent = create_agent(
-    model,
+    llm,
     tools=[search_policy],
     system_prompt="당신은 키키테크 사내 규정 전문 에이전트입니다. search_policy 도구로 규정을 찾아 답변하세요.",
 )
@@ -85,7 +85,7 @@ with open(os.path.join(current_dir, "agents.md"), encoding="utf-8") as f:
 # ── Supervisor Agent 생성 ─────────────────────────────────────────────────────
 
 agent = create_agent(
-    model,
+    llm,
     tools=[ask_employee_agent, ask_product_agent, ask_policy_agent],
     system_prompt=system_prompt,
     middleware=[guardrail, tool_logger, token_tracker],

@@ -1,3 +1,4 @@
+from pathlib import Path
 from rag_retriever import RAGRetriever
 from langchain_core.tools import tool
 
@@ -21,4 +22,3 @@ def search_documents(query: str) -> str:
     return "\n\n---\n\n".join(formatted)
 
 # 3. agent에 tool로 전달
-agent = create_agent(model, tools=[search_documents], ...)

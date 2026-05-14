@@ -7,7 +7,7 @@ from .rag_retriever import RAGRetriever
 
 load_dotenv(find_dotenv())
 
-DATA_DIR = os.path.join(RAG_DIR, "data")
+DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 
 # 제품 관련 문서로 RAGRetriever 구성
 product_rag = RAGRetriever()
